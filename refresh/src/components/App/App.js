@@ -6,14 +6,18 @@ import cucSlice from '../../images/cucSlice.png';
 const App = () => {
   const [projects, setProjects] = useState([]);
   const [activeProjectId, setActiveProjectId] = useState(null);
-  const [anyProjectIsExpanded, setAnyProjectIsExpanded] = useState(false);
 
   const handleProjectDoubleClick = (projectId) => {
-    setAnyProjectIsExpanded(true);
     setActiveProjectId(projectId);
   };
+
   const addProject = (name, description) => {
-    const newProject = { id: Date.now(), name, description, tabs: [] };
+    const newProject = {
+      id: Date.now(),
+      name,
+      description,
+      tabs: [{ id: Date.now(), name: 'Default Tab', content: 'Default content' }], // Start with a default tab
+    };
     setProjects([...projects, newProject]);
   };
 
@@ -32,6 +36,7 @@ const App = () => {
   };
 
   const handleProjectClick = (projectId) => {
+    // Toggle active state
     setActiveProjectId(projectId);
   };
 
@@ -48,13 +53,17 @@ const App = () => {
     }));
   };
 
+  const refreshProjects = () => {
+    // This function should handle the logic for refreshing projects,
+    // e.g., fetching them from a server or resetting to initial state
+  };
 
   return (
     <div>
       <nav className="navbar">
         <div className="navbar-brand">
           <img src={cucSlice} alt="Cucumber Slice" className="navbar-image" />
-          <span className="refresh-text">refresh</span>
+          <span className="refresh-text" onClick={refreshProjects}>refresh</span>
           <button className="menu-button">☰</button>
         </div>
       </nav>
