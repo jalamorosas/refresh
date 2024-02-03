@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Project from '../Project/Project';
 import './App.css';
 import cucSlice from '../../images/cucSlice.png';
@@ -12,6 +12,7 @@ const App = () => {
     setAnyProjectIsExpanded(true);
     setActiveProjectId(projectId);
   };
+
   const addProject = (name, description) => {
     const newProject = { id: Date.now(), name, description, tabs: [] };
     setProjects([...projects, newProject]);
@@ -35,9 +36,37 @@ const App = () => {
     setActiveProjectId(projectId);
   };
 
-  // if (projects.length > 0 && projects[0].tabs.length === 0) {
-  //   addTabToProject(projects[0].id, 'First Tab', 'Content of the first tab');
-  // }
+  useEffect(() => {
+    const receiveMessage = (event) => {
+      if (event.source === window && event.data && event.data.type === "FROM_EXTENSION") {
+        const data = event.data.data; // This is your array of arrays
+  
+        // Example of processing the received data
+        // Assuming each entry is [title, url], and you want to create a new project for each
+        data.forEach((entry, index) => {
+          const [title, url] = entry;
+          // For simplicity, using index as projectId, adjust as necessary
+          const projectId = `project-${index}`;
+          const tabName = title; // Assuming the title is what you want to name the tab
+          const tabContent = url; // Using the URL as tab content, adjust as necessary
+          
+          // Check if the project exists
+          const projectExists = projects.some(project => project.id === projectId);
+          if (!projectExists) {
+            addProject(`Project ${projectId}`, 'Generated from Chrome Extension');
+          }
+          // Add the tab to the project
+          setTimeout(() => addTabToProject(projectId, tabName, tabContent), 0);
+        });
+      }
+    };
+  
+    window.addEventListener("message", receiveMessage);
+  
+    return () => {
+      window.removeEventListener("message", receiveMessage);
+    };
+  }, [projects]);
 
   const updateProject = (projectId, newName, newDescription) => {
     setProjects(projects.map(project => {
@@ -47,7 +76,6 @@ const App = () => {
       return project;
     }));
   };
-
 
   return (
     <div>
@@ -78,6 +106,4 @@ const App = () => {
   );
 };
 
-
 export default App;
-
