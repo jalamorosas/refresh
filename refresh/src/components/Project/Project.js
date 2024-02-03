@@ -70,8 +70,8 @@ const Project = ({ project, isActive, onClick, onUpdate, onDelete, onDoubleClick
         <div className="edit-fields">
         <input className="edit-name" value={editedName} onChange={handleNameChange} placeholder="Project Name" />
         <textarea className="edit-description" value={editedDescription} onChange={handleDescriptionChange} placeholder="Project Description"></textarea>
-        <button onClick={saveChanges}>Save</button>
-        <button onClick={toggleEdit}>Cancel</button>
+        <button className = "saveAndCancelSAVE" onClick={saveChanges}>Save</button>
+        <button className = "saveAndCancelCANCEL" onClick={toggleEdit}>Cancel</button>
       </div>
       ) : (
         <>

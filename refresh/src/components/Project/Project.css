@@ -155,3 +155,35 @@
 .edit-description {
   min-height: 40px; /* Or any other height that makes sense for your design */
 }
+
+.edit-name{
+  height: 40px;
+}
+
+.saveAndCancelSAVE{
+  background-color: #68ecc0;
+  padding: 8px 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.saveAndCancelCANCEL{
+  background-color: #eb687e;
+  padding: 8px 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.saveAndCancelSAVE:hover {
+  background-color: #c9ffed; /* Darker blue on hover */
+}
+
+.saveAndCancelCANCEL:hover {
+  background-color: #d95369; /* Darker blue on hover */
+}
