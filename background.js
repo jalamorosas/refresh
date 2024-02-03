@@ -29,22 +29,24 @@ function clearHistory() {
 
 function generateSummary(sendResponse) {
     console.log('Generate summary called');
-    chrome.storage.local.get(['visitedTabs'], function(result) {
+    chrome.storage.local.get(['visitedTabs', 'projectIntention'], function(result) {
         if (result.visitedTabs) {
-            const data = {tabs: result.visitedTabs}
-            console.log(result.visitedTabs);
+            const data = {
+                tabs: result.visitedTabs,
+                intention: result.projectIntention || 'No intention set'
+            };
+            console.log(data);
             sendVisitedTabsToServer(data)
-            .then(data => {
-                // Assuming sendVisitedTabsToServer is modified to return a promise that resolves when data is received
-                chrome.storage.local.set({ summary: data }, function() {
-                    console.log("Summary Stored");
-                    sendResponse({ success: true }); // Send a response back indicating success
+                .then(data => {
+                    chrome.storage.local.set({ summary: data }, function() {
+                        console.log("Summary Stored");
+                        sendResponse({ success: true }); // Indicate success
+                    });
+                })
+                .catch(error => {
+                    console.error('Error sending visited tabs to server:', error);
+                    sendResponse({ success: false, error: error }); // Indicate failure
                 });
-            })
-            .catch(error => {
-                console.error('Error sending visited tabs to server:', error);
-                sendResponse({ success: false, error: error }); // Send an error response
-            });
         } else {
             console.log("ERROR GENERATING SUMMARY");
             sendResponse({ success: false, error: "No visited tabs data found." });
@@ -96,45 +98,31 @@ function trackTab(activeInfo) {
 //     }
 // });
 
-function sendVisitedTabsToServer(tabs) {
-    const url = "http://localhost:3000/upload-tabs-history"; // Adjust the endpoint as necessary
-    console.log("Sending visited tabs to server awaiting response...");
+function sendVisitedTabsToServer(data) {
+    const url = "http://localhost:3000/upload-tabs-history";
+    console.log("Sending visited tabs and project intention to server awaiting response...");
 
-    // Return the fetch chain so that the calling function can use .then() or .catch() on sendVisitedTabsToServer
     return fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(tabs)
+        body: JSON.stringify(data)
     })
     .then(response => {
         if (!response.ok) {
-            // If the response is not 2xx, throw an error to be caught by the catch block
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
         chrome.runtime.sendMessage({ action: "serverResponse", data: data });
-        // Since chrome.storage.local.set is asynchronous and uses the callback pattern, 
-        // we wrap it in a promise to ensure it's included in the chain.
-        return new Promise((resolve, reject) => {
-            chrome.storage.local.set({ summary: data }, () => {
-                if (chrome.runtime.lastError) {
-                    console.error("Error storing the summary:", chrome.runtime.lastError);
-                    reject(chrome.runtime.lastError);
-                } else {
-                    console.log("Summary Stored");
-                    resolve(data); // Resolve with the server response data
-                }
-            });
-        });
+        return data; // Return the response data for further processing
     })
     .catch(error => {
         console.error('Error sending visited tabs to server:', error);
-        // Rethrow the error so it can be caught by the caller of sendVisitedTabsToServer
-        throw error;
+        throw error; // Rethrow to be caught by the caller
     });
 }
+
 
