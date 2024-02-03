@@ -1,17 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const button = document.getElementById('toggleTracking');
+    const trackingButton = document.getElementById('toggleTracking');
+    const clearHistoryButton = document.getElementById('clearHistory');
+    const generateSummaryButton = document.getElementById('generateSummary');
 
     // Check the current tracking state and update button text
     chrome.storage.local.get(['isTracking'], function (result) {
-        button.textContent = result.isTracking ? 'Stop Tracking' : 'Start Tracking';
+        trackingButton.textContent = result.isTracking ? 'Stop Tracking' : 'Start Tracking';
     });
 
-    button.addEventListener('click', () => {
+    trackingButton.addEventListener('click', () => {
         console.log("Tracking toggled");
         chrome.runtime.sendMessage({ toggle: 'toggleTracking' });
         // Toggle the button text
-        const newText = button.textContent === 'Start Tracking' ? 'Stop Tracking' : 'Start Tracking';
-        button.textContent = newText;
+        const newText = trackingButton.textContent === 'Start Tracking' ? 'Stop Tracking' : 'Start Tracking';
+        trackingButton.textContent = newText;
+    });
+
+    clearHistoryButton.addEventListener('click', () => {
+        console.log("Clearing visitedTabs History");
+        chrome.runtime.sendMessage({ toggle: 'clearHistory' });
+    });
+
+    generateSummaryButton.addEventListener('click', () => {
+        console.log("Generating Summary");
+        chrome.runtime.sendMessage({ toggle: 'generateSummary' });
     });
 
     showSummary();
