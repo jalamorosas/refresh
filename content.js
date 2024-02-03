@@ -1,9 +1,7 @@
-// content.js
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.message === "getLocalStorage") {
-        chrome.storage.local.get(["yourDataKey"], function(result) {
-            sendResponse({data: result.yourDataKey});
-        });
-        return true; // Keep the message channel open for the sendResponse callback
-    }
+chrome.storage.local.get("yourDataKey", function(result) {
+    const dataToSend = result.yourDataKey; // Assuming this is your array of arrays
+    window.postMessage({
+        type: "FROM_EXTENSION",
+        data: dataToSend
+    }, "*");
 });

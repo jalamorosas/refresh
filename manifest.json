@@ -12,7 +12,7 @@
     },
     "content_scripts": [
         {
-          "matches": ["http://google.com/*"],
+          "matches": ["http://localhost:3000/"],
           "js": ["content.js"]
         }
     ],
