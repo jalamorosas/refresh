@@ -10,9 +10,20 @@
     "background": {
       "service_worker": "background.js"
     },
+    "content_scripts": [
+        {
+          "matches": ["http://google.com/*"],
+          "js": ["content.js"]
+        }
+    ],
     "action": {
       "default_popup": "index.html",
       "default_title": "Click on this button"
+    },
+    "icons": {
+        "16": "images/cucSlice.ico",
+        "48": "images/cucSlice.ico",
+        "128": "images/cucSlice.ico"
     }
   }
 
