@@ -21,11 +21,19 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.runtime.sendMessage({ toggle: 'clearHistory' });
     });
 
+    // Within your document.addEventListener('DOMContentLoaded', ...
     generateSummaryButton.addEventListener('click', () => {
         console.log("Generating Summary");
-        chrome.runtime.sendMessage({ toggle: 'generateSummary' });
+        generateSummaryButton.textContent = "Generating...";
+        generateSummaryButton.disabled = true; // Optionally disable the button to prevent multiple clicks
+        chrome.runtime.sendMessage({ toggle: 'generateSummary' }, function(response) {
+            // Once the summary has been generated, change the text back
+            generateSummaryButton.textContent = "Generate Summary";
+            generateSummaryButton.disabled = false; // Re-enable the button
+            // Optionally call showSummary() here if the summary is updated as a result of this operation
+            showSummary();
+        });
     });
-
     showSummary();
     
 });

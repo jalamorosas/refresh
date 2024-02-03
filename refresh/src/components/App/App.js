@@ -43,11 +43,14 @@ const App = () => {
   useEffect(() => {
     const receiveMessage = (event) => {
       if (event.source === window && event.data && event.data.type === "FROM_EXTENSION") {
-        const data = event.data.data; // This is your array of arrays
+        const visitedTabs = event.data.data.visitedTabs; // This is your array of arrays
+        const summary = JSON.parse(event.data.data.summary.message.content).summary; // This is your array of arrays
+        console.log(visitedTabs);
+        console.log(summary)
   
         // Example of processing the received data
         // Assuming each entry is [title, url], and you want to create a new project for each
-        data.forEach((entry, index) => {
+        visitedTabs.forEach((entry, index) => {
           const [title, url] = entry;
           // For simplicity, using index as projectId, adjust as necessary
           const projectId = `project-${index}`;
@@ -81,14 +84,11 @@ const App = () => {
     }));
   };
 
-<<<<<<< HEAD
   const refreshProjects = () => {
     // This function should handle the logic for refreshing projects,
     // e.g., fetching them from a server or resetting to initial state
   };
 
-=======
->>>>>>> 217afc4deb03dd995b59212ac7ca406b32265abd
   return (
     <div>
       <nav className="navbar">
