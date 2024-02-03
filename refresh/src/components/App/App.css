@@ -1,0 +1,74 @@
+/* src/components/App/App.css */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-image {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.refresh-text {
+  cursor: pointer;
+  font-size: 30px;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  order: 2;
+}
+
+.create-new-button {
+  background-color: transparent; /* No fill color */
+  color: #4CAF50; /* Text color */
+  padding: 10px 15px;
+  border: 2px dotted #4CAF50; /* Dotted border */
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 30px;
+  /* Add any additional positioning styles here if needed */
+}
+
+.create-new-button:hover {
+  background-color: #e8f5e9; /* Light green background on hover */
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.project.expanded {
+  position: fixed;
+  top: 10vh;
+  left: 10vw;
+  width: 80vw;
+  height: 80vh;
+  z-index: 10;
+  box-shadow: 0 4px 
+}

@@ -1,0 +1,189 @@
+/* src/components/Project/Project.css */
+
+.project {
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  padding: 20px;
+  cursor: pointer;
+  background-color: white;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.project h2 {
+  color: #333;
+  margin: 0 0 10px 0;
+}
+
+.project p {
+  margin: 5px 0;
+}
+
+.project:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.project.active {
+  background-color: #e8f5e9;
+  border-color: #2e7d32;
+}
+
+.delete-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 10px;
+  margin: 10px;
+  background-color: transparent;
+  border: none;
+  color: black;
+  font-size: 25px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.delete-button:hover {
+  color: darkgray;
+}
+
+.project.expanded {
+  position: fixed;
+  top: 10vh;
+  left: 10vw;
+  width: 80vw;
+  height: 80vh;
+  z-index: 10;
+  /* Add any additional styles for the expanded project */
+}
+
+/* .project-links {
+  margin-top: 20px;
+}
+
+.project-links .link {
+  margin-bottom: 10px;
+}
+
+.project-links .link h3 {
+  margin: 0 0 5px 0;
+}
+
+.project-links .link a {
+  color: #2e7d32;
+  text-decoration: none;
+}
+
+.project-links .link a:hover {
+  text-decoration: underline;
+} */
+
+/* ... existing styles ... */
+
+.last-sessions-tabs {
+  margin-top: 20px;
+}
+
+.last-sessions-tabs h3 {
+  margin-bottom: 10px;
+}
+
+.tabs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjust minmax values as needed */
+  gap: 10px;
+}
+
+/* Style for individual Tab components */
+.tab {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  /* Add more styles for Tab component */
+}
+
+.toggle-details-button {
+  background-color: #44b992; /* Blue background */
+  color: white; /* White text */
+  border: none;
+  padding: 8px 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-details-button:hover {
+  background-color: #2d7c62; /* Darker blue on hover */
+}
+
+.toggle-details-button svg {
+  margin-right: 5px; /* Add space between icon and text */
+}
+
+.pencil {
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+  cursor: pointer;
+  color: #6c757d; /* Gray color */
+}
+
+.pencil:hover {
+  color: #2cbd70; /* Darker gray on hover */
+}
+
+.edit-fields {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adjust the gap to your preference */
+}
+
+.edit-name,
+.edit-description {
+  flex-grow: 1; /* Makes the input and textarea take up equal space */
+  padding: 10px;
+  border: 3px solid black;
+  border-radius: 4px;
+  margin-right: 10px; /* Space between the fields and the buttons */
+}
+
+.edit-description {
+  min-height: 40px; /* Or any other height that makes sense for your design */
+}
+
+.edit-name{
+  height: 40px;
+}
+
+.saveAndCancelSAVE{
+  background-color: #68ecc0;
+  padding: 8px 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.saveAndCancelCANCEL{
+  background-color: #eb687e;
+  padding: 8px 16px;
+  margin-top: 20px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.saveAndCancelSAVE:hover {
+  background-color: #c9ffed; /* Darker blue on hover */
+}
+
+.saveAndCancelCANCEL:hover {
+  background-color: #d95369; /* Darker blue on hover */
+}
