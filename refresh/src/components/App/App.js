@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Project from '../Project/Project';
 import './App.css';
 import cucSlice from '../../images/cucSlice.png';
+import Tab from '../Tab/Tab';
 
 const App = () => {
   const [projects, setProjects] = useState([]);
@@ -40,6 +41,7 @@ const App = () => {
     const receiveMessage = (event) => {
       if (event.source === window && event.data && event.data.type === "FROM_EXTENSION") {
         const data = event.data.data; // This is your array of arrays
+        console.log(data)
   
         // Example of processing the received data
         // Assuming each entry is [title, url], and you want to create a new project for each
