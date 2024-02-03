@@ -38,9 +38,19 @@ function showSummary() {
         if (result.summary && result.summary.message && result.summary.message.content){
             // If summary exists and has the necessary structure, parse and display it
             let summaryObject = JSON.parse(result.summary.message.content);
-            
             console.log("Value is " + summaryObject.summary);
-            summaryField.innerText = summaryObject.summary; // Update the text of the summary field
+
+            // Start with the summary text
+            let summaryText = summaryObject.summary;
+
+            // Add 'Next Steps:' followed by the steps, each on a new line
+            summaryText += '\n\nNext Steps:\n';
+            summaryObject.next_steps.forEach((step, index) => {
+                summaryText += (index + 1) + '. ' + step + '\n';
+            });
+
+            // Update the text of the summary field
+            summaryField.innerText = summaryText;
         } else {
             // If no summary is found, or the structure is not as expected, handle it appropriately
             summaryField.innerText = "No summary available.";

@@ -20,11 +20,12 @@
       "default_popup": "index.html",
       "default_title": "Click on this button"
     },
-    "icons": {
-        "16": "images/cucSlice.ico",
-        "48": "images/cucSlice.ico",
-        "128": "images/cucSlice.ico"
+    
+"icons": {
+    "16": "images/icon16.png",
+    "32": "images/icon32.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
     }
-  }
-
+}
   
