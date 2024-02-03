@@ -1,0 +1,22 @@
+/* src/components/Tab/Tab.css */
+
+.tab {
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+  }
+  
+  .tab h3 {
+    margin: 0;
+    color: #333;
+    font-size: 16px;
+  }
+  
+  .tab p {
+    color: #666;
+    font-size: 14px;
+    margin: 5px 0 0 0;
+  }
+  
