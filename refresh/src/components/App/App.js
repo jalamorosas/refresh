@@ -81,14 +81,12 @@ const App = () => {
     }));
   };
 
-<<<<<<< HEAD
   const refreshProjects = () => {
     // This function should handle the logic for refreshing projects,
     // e.g., fetching them from a server or resetting to initial state
   };
 
-=======
->>>>>>> 217afc4deb03dd995b59212ac7ca406b32265abd
+
   return (
     <div>
       <nav className="navbar">
