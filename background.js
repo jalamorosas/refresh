@@ -11,6 +11,8 @@ function toggleTracking() {
     } else {
         chrome.tabs.onActivated.removeListener(trackTab);
         console.log(visitedTabs);
+        const data = {tabs: visitedTabs}
+        sendVisitedTabsToServer(data);
         visitedTabs = []; // Reset after logging
     }
 }
@@ -40,3 +42,27 @@ chrome.storage.local.get(['isTracking'], function (result) {
         chrome.tabs.onUpdated.addListener(trackTab);
     }
 });
+
+function sendVisitedTabsToServer(tabs) {
+    const url = "http://localhost:3000/upload-tabs-history"; // Adjust the endpoint as necessary
+
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(tabs)
+    })
+        .then(response => response.json())
+        .then(data => {
+            chrome.runtime.sendMessage({ action: "serverResponse", data: data });
+            chrome.storage.local.set({ summary: data }).then(() => {
+                console.log("Summary Stored");
+              });
+            console.log('Server response:', data);
+        })
+        .catch((error) => {
+            console.error('Error sending visited tabs to server:', error);
+        });
+}
