@@ -89,6 +89,7 @@ const App = () => {
     // e.g., fetching them from a server or resetting to initial state
   };
 
+
   return (
     <div>
       <nav className="navbar">
