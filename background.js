@@ -83,6 +83,7 @@ function trackTab(activeInfo) {
     if (isTracking) {
         chrome.tabs.get(activeInfo.tabId, (tab) => {
             if (tab.url) {
+                console.log(tab.url);
                 visitedTabs.push([tab.title, tab.url]);
                 chrome.storage.local.set({ visitedTabs: visitedTabs });
             }
