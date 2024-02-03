@@ -1,46 +1,42 @@
 let isTracking = false;
+let visitedTabs = [];
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "startTracking") {
+// Function to toggle tracking
+function toggleTracking() {
     isTracking = !isTracking;
+    chrome.storage.local.set({ isTracking }); // Save the tracking state
+
     if (isTracking) {
-      startTracking();
+        chrome.tabs.onActivated.addListener(trackTab);
     } else {
-      stopTracking();
+        chrome.tabs.onActivated.removeListener(trackTab);
+        console.log(visitedTabs);
+        visitedTabs = []; // Reset after logging
     }
-  }
+}
+
+// Listen for a message from the popup script to toggle tracking
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.toggle === 'toggleTracking') {
+        toggleTracking();
+    }
 });
 
-// 
-function startTracking() {
-  chrome.tabs.onUpdated.addListener(handleTabUpdated);
-  chrome.tabs.onActivated.addListener(handleTabActivated);
+// Function to track tab URL changes
+function trackTab(activeInfo) {
+    if (isTracking) {
+        chrome.tabs.get(activeInfo.tabId, (tab) => {
+            if (tab.url) {
+                visitedTabs.push([tab.title, tab.url]);
+            }
+        });
+    }
 }
 
-function stopTracking() {
-  chrome.tabs.onUpdated.removeListener(handleTabUpdated);
-  chrome.tabs.onActivated.removeListener(handleTabActivated);
-}
-
-function handleTabUpdated(tabId, changeInfo, tab) {
-  if (isTracking && changeInfo.status === 'complete' && tab.url) {
-    saveTabInfo(tab);
-  }
-}
-
-function handleTabActivated(activeInfo) {
-  if (isTracking) {
-    chrome.tabs.get(activeInfo.tabId, (tab) => {
-      if (tab.url) {
-        saveTabInfo(tab);
-      }
-    });
-  }
-}
-
-function saveTabInfo(tab) {
-  // Use chrome.storage.local to save tab info
-  console.log(`Tab: ${tab.url}, Title: ${tab.title}`);
-  let tabData = {url: tab.url, title: tab.title};
-  chrome.runtime.sendMessage({action: "tabInfo", data: tabData});
-}
+// Initialize tracking state from storage
+chrome.storage.local.get(['isTracking'], function (result) {
+    isTracking = !!result.isTracking;
+    if (isTracking) {
+        chrome.tabs.onUpdated.addListener(trackTab);
+    }
+});

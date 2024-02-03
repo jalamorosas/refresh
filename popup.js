@@ -1,18 +1,16 @@
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('startTracking').addEventListener('click', () => {
-        chrome.runtime.sendMessage({ action: "startTracking" });
+document.addEventListener('DOMContentLoaded', function () {
+    const button = document.getElementById('toggleTracking');
+
+    // Check the current tracking state and update button text
+    chrome.storage.local.get(['isTracking'], function (result) {
+        button.textContent = result.isTracking ? 'Stop Tracking' : 'Start Tracking';
     });
 
-    chrome.runtime.onMessage.addListener((message) => {
-        if (message.type === 'tabInfo') {
-            displayTabInfo(message.tab);
-        }
+    button.addEventListener('click', () => {
+        console.log("Tracking toggled");
+        chrome.runtime.sendMessage({ toggle: 'toggleTracking' });
+        // Toggle the button text
+        const newText = button.textContent === 'Start Tracking' ? 'Stop Tracking' : 'Start Tracking';
+        button.textContent = newText;
     });
 });
-
-function displayTabInfo() {
-    const tabList = document.getElementById('tabList');
-    const tabInfoElement = document.createElement('div');
-    tabInfoElement.textContent = `Tab: ${tab.url}, Title: ${tab.title}`;
-    tabList.appendChild(tabInfoElement);
-}
