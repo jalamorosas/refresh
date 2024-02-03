@@ -3,6 +3,7 @@ import Tab from '../Tab/Tab';
 import './Project.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Project = ({ project, isActive, onClick, onUpdate, onDelete, onDoubleClick }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -66,15 +67,19 @@ const Project = ({ project, isActive, onClick, onUpdate, onDelete, onDoubleClick
             </div>
       </div>
       {isEditing ? (
-        <div>
-          <input value={editedName} onChange={handleNameChange} />
-          <textarea value={editedDescription} onChange={handleDescriptionChange} />
-          <button onClick={saveChanges}>Save</button>
-          <button onClick={toggleEdit}>Cancel</button>
-        </div>
+        <div className="edit-fields">
+        <input className="edit-name" value={editedName} onChange={handleNameChange} placeholder="Project Name" />
+        <textarea className="edit-description" value={editedDescription} onChange={handleDescriptionChange} placeholder="Project Description"></textarea>
+        <button onClick={saveChanges}>Save</button>
+        <button onClick={toggleEdit}>Cancel</button>
+      </div>
       ) : (
         <>
-          <h2 onDoubleClick={toggleEdit}>{project.name}</h2>
+          <h2 onDoubleClick={toggleEdit}>
+            {project.name}
+            <span onClick={(e) => {e.stopPropagation(); toggleEdit();}} className="edit-icon">
+                <FontAwesomeIcon className = "pencil" icon={faPencilAlt} />
+          </span></h2>
           {isActive && (
             <>
               <p onDoubleClick={toggleEdit}>{project.description}</p>
