@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    width: 400px;  /* Your desired width */
+    height: 500px; /* Your desired height */
+    margin: 0;
+    padding: 0;
+}
+
+.summary-container {
+    width: 100%; /* Adjust the width as needed */
+    margin-top: 20px; /* Spacing from the buttons above */
+}
+
+.summary-header {
+    font-size: 1.5rem; /* Adjust font size as needed */
+    margin-bottom: 10px; /* Spacing above the scroll box */
+}
+
+.summary-content {
+    background: #1a1a1a; /* Background color for the scroll box */
+    border: 1px solid #333; /* Border to make it stand out a bit */
+    height: 150px; /* Fixed height for the scroll box */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 10px; /* Padding inside the scroll box */
+    text-align: left; /* Align the text to the left */
+    width: 90%; /* Width of the scroll box, relative to the summary-container */
+    margin: 0 auto; /* Center the box in the summary-container */
+}
