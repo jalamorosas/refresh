@@ -39,62 +39,120 @@ const Project = ({ project, isActive, onClick, onUpdate, onDelete, onDoubleClick
       onDelete(project.id);
     }
   };
+
+  // asign this varaible to = summary
+  const summaryText = "This is a summary of the project, including information about tab groups and other relevant details.";
+
   
 
+//   return (
+//     <div
+//       className={`project ${isActive ? 'active' : ''} ${isDetailsExpanded ? 'expanded' : ''}`}
+//       onClick={() => !isEditing && onClick(project.id)}
+//       onDoubleClick={handleDoubleClick}
+//     >
+//       {isEditing ? (
+//         <div className="edit-fields">
+//         <input className="edit-name" value={editedName} onChange={handleNameChange} placeholder="Project Name" />
+//         <textarea className="edit-description" value={editedDescription} onChange={handleDescriptionChange} placeholder="Project Description"></textarea>
+//         <button className = "saveAndCancelSAVE" onClick={saveChanges}>Save</button>
+//         <button className = "saveAndCancelCANCEL" onClick={toggleEdit}>Cancel</button>
+//       </div>
+//       ) : (
+//         <>
+//           <h2 onDoubleClick={toggleEdit}>
+//             {project.name}
+//             <span onClick={(e) => {e.stopPropagation(); toggleEdit();}} className="edit-icon">
+//                 <FontAwesomeIcon className = "pencil" icon={faPencilAlt} />
+//           </span></h2>
+//           {isActive && (
+//             <>
+//             <p onDoubleClick={toggleEdit}>{project.description}</p>
+              
+//               {/* Summary Section */}
+//               {isDetailsExpanded && (
+//                 <h1>Summary</h1>
+//               )}
+//               {/* Summary Text */}
+//               {isDetailsExpanded && (
+//                 <h3>{summaryText}</h3>
+//               )}
+
+//               <p onDoubleClick={toggleEdit}>{project.description}</p>
+//               <button onClick={handleDelete} className="delete-button">
+//                   <FontAwesomeIcon icon={faTrash} />
+//               </button>              
+//               {/* <button className ="toggle-details-button" onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}>
+//                 Show/Hide
+//               </button> */}
+//               <div className={`project-details ${isDetailsExpanded ? 'expanded' : ''}`}>
+//                 {/* Render project details here */}
+//               </div>
+//               {project.tabs.map((tab) => (
+//                 <Tab key={tab.id} tab={tab} />
+//               ))}
+
+//               {/* Show/Hide Button moved to bottom left */}
+//               <div style={{ position: 'absolute', bottom: '10px', left: '10px' }}>
+//                 <button className="toggle-details-button" onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}>
+//                   {isDetailsExpanded ? 'Hide' : 'Show'}
+//                 </button>
+//               </div>
+//             </>
+//           )}
+//         </>
+//       )}
+//     </div>
+//   );
+// };
   return (
     <div
       className={`project ${isActive ? 'active' : ''} ${isDetailsExpanded ? 'expanded' : ''}`}
       onClick={() => !isEditing && onClick(project.id)}
       onDoubleClick={handleDoubleClick}
     >
-      {/* {isActive && isDetailsExpanded && (
-        <div className="project-links">
-          {project.links.map((linkObj, index) => (
-            <div key={index} className="link">
-              <h3>{linkObj.header}</h3>
-              <a href={linkObj.link} target="_blank" rel="noopener noreferrer">{linkObj.link}</a>
-            </div>
-          ))}
-        </div>
-      )} */}
-      {/* Last Session's Tabs  */} 
-      <div className="last-sessions-tabs">
-            <h3>Last Session's Tabs</h3>
-            <div className="tabs-grid">
-              {project.tabs.map(tab => (
-                <Tab key={tab.id} tab={tab} />
-              ))}
-            </div>
-      </div>
       {isEditing ? (
         <div className="edit-fields">
-        <input className="edit-name" value={editedName} onChange={handleNameChange} placeholder="Project Name" />
-        <textarea className="edit-description" value={editedDescription} onChange={handleDescriptionChange} placeholder="Project Description"></textarea>
-        <button className = "saveAndCancelSAVE" onClick={saveChanges}>Save</button>
-        <button className = "saveAndCancelCANCEL" onClick={toggleEdit}>Cancel</button>
-      </div>
+          <input className="edit-name" value={editedName} onChange={handleNameChange} placeholder="Project Name" />
+          <textarea className="edit-description" value={editedDescription} onChange={handleDescriptionChange} placeholder="Project Description"></textarea>
+          <button className="saveAndCancelSAVE" onClick={saveChanges}>Save</button>
+          <button className="saveAndCancelCANCEL" onClick={toggleEdit}>Cancel</button>
+        </div>
       ) : (
         <>
           <h2 onDoubleClick={toggleEdit}>
             {project.name}
             <span onClick={(e) => {e.stopPropagation(); toggleEdit();}} className="edit-icon">
-                <FontAwesomeIcon className = "pencil" icon={faPencilAlt} />
-          </span></h2>
+              <FontAwesomeIcon className="pencil" icon={faPencilAlt} />
+            </span>
+          </h2>
           {isActive && (
             <>
               <p onDoubleClick={toggleEdit}>{project.description}</p>
-              <button onClick={handleDelete} className="delete-button">
-                  <FontAwesomeIcon icon={faTrash} />
-              </button>              
-              <button className ="toggle-details-button" onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}>
-                Show/Hide
-              </button>
-              <div className={`project-details ${isDetailsExpanded ? 'expanded' : ''}`}>
-                {/* Render project details here */}
-              </div>
-              {project.tabs.map((tab) => (
+                
+              {/* Summary Section */}
+              {isDetailsExpanded && (
+                <>
+                  <h1>Summary</h1>
+                  <h3>{summaryText}</h3>
+                </>
+              )}
+
+              {/* Render Tabs - Assuming you still want to render the tabs */}
+              {isDetailsExpanded && project.tabs.map((tab) => (
                 <Tab key={tab.id} tab={tab} />
               ))}
+
+              {/* Show/Hide Button moved to bottom left */}
+              <div style={{ position: 'absolute', bottom: '10px', left: '10px' }}>
+                <button className="toggle-details-button" onClick={() => setIsDetailsExpanded(!isDetailsExpanded)}>
+                  {isDetailsExpanded ? 'Hide' : 'Show'}
+                </button>
+              </div>
+                
+              <button onClick={handleDelete} className="delete-button">
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
             </>
           )}
         </>

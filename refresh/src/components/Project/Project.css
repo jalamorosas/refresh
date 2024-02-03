@@ -57,29 +57,6 @@
   /* Add any additional styles for the expanded project */
 }
 
-/* .project-links {
-  margin-top: 20px;
-}
-
-.project-links .link {
-  margin-bottom: 10px;
-}
-
-.project-links .link h3 {
-  margin: 0 0 5px 0;
-}
-
-.project-links .link a {
-  color: #2e7d32;
-  text-decoration: none;
-}
-
-.project-links .link a:hover {
-  text-decoration: underline;
-} */
-
-/* ... existing styles ... */
-
 .last-sessions-tabs {
   margin-top: 20px;
 }
@@ -186,4 +163,15 @@
 
 .saveAndCancelCANCEL:hover {
   background-color: #d95369; /* Darker blue on hover */
+}
+
+.project h1 {
+  margin-top: 20px; /* Adjust as needed */
+  /* additional styles */
+}
+
+/* Style for the summary text */
+.project h3 {
+  margin-top: 10px; /* Adjust as needed */
+  /* additional styles */
 }
