@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 }
             }
+            chrome.runtime.sendMessage({ toggle: 'toggleTracking' });
             // Toggle tracking state after potentially setting project intention
             toggleTrackingStateAndUpdateButtonText();
         });
