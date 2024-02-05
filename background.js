@@ -27,18 +27,42 @@ function clearHistory() {
     chrome.storage.local.set({ visitedTabs: visitedTabs });
 }
 
-function generateSummary() {
+function generateSummary(sendResponse) {
     console.log('Generate summary called');
-    chrome.storage.local.get(['visitedTabs'], function(result) {
+    chrome.storage.local.get(['visitedTabs', 'projectIntention'], function(result) {
         if (result.visitedTabs) {
-            const data = {tabs: result.visitedTabs}
-            console.log(result.visitedTabs);
-            sendVisitedTabsToServer(data); 
+            const data = {
+                tabs: result.visitedTabs,
+                intention: result.projectIntention || 'No intention set'
+            };
+            console.log(data);
+            sendVisitedTabsToServer(data)
+                .then(data => {
+                    chrome.storage.local.set({ summary: data }, function() {
+                        console.log("Summary Stored");
+                        sendResponse({ success: true }); // Indicate success
+                    });
+                })
+                .catch(error => {
+                    console.error('Error sending visited tabs to server:', error);
+                    sendResponse({ success: false, error: error }); // Indicate failure
+                });
         } else {
-            console.log("ERROR GENERATING SUMMARY")
+            console.log("ERROR GENERATING SUMMARY");
+            sendResponse({ success: false, error: "No visited tabs data found." });
         }
-    } )
+    });
+    return true; // Indicate that the response is asynchronous
 }
+
+// Modify message listener to call generateSummary with sendResponse
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.toggle === 'generateSummary') {
+        generateSummary(sendResponse);
+        return true; // Return true to indicate async sendResponse
+    }
+});
+
 
 // Listen for a message from the popup script to toggle tracking
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -53,17 +77,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.toggle === 'generateSummary') {
-        generateSummary();
-    }
-});
 
 // Function to track tab URL changes
 function trackTab(activeInfo) {
     if (isTracking) {
         chrome.tabs.get(activeInfo.tabId, (tab) => {
             if (tab.url) {
+                console.log(tab.url);
                 visitedTabs.push([tab.title, tab.url]);
                 chrome.storage.local.set({ visitedTabs: visitedTabs });
             }
@@ -79,26 +99,31 @@ function trackTab(activeInfo) {
 //     }
 // });
 
-function sendVisitedTabsToServer(tabs) {
-    const url = "http://localhost:3000/upload-tabs-history"; // Adjust the endpoint as necessary
-    console.log("Sending visited tabs to server awaiting response...")
+function sendVisitedTabsToServer(data) {
+    const url = "http://localhost:3000/upload-tabs-history";
+    console.log("Sending visited tabs and project intention to server awaiting response...");
 
-    fetch(url, {
+    return fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(tabs)
+        body: JSON.stringify(data)
     })
-        .then(response => response.json())
-        .then(data => {
-            chrome.runtime.sendMessage({ action: "serverResponse", data: data });
-            chrome.storage.local.set({ summary: data }).then(() => {
-                console.log("Summary Stored");
-              });
-            console.log('Server response:', data);
-        })
-        .catch((error) => {
-            console.error('Error sending visited tabs to server:', error);
-        });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        chrome.runtime.sendMessage({ action: "serverResponse", data: data });
+        return data; // Return the response data for further processing
+    })
+    .catch(error => {
+        console.error('Error sending visited tabs to server:', error);
+        throw error; // Rethrow to be caught by the caller
+    });
 }
+
+

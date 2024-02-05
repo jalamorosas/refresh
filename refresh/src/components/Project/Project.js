@@ -138,9 +138,8 @@ const Project = ({ project, isActive, onClick, onUpdate, onDelete, onDoubleClick
                 </>
               )}
 
-              {/* Render Tabs - Assuming you still want to render the tabs */}
-              {isDetailsExpanded && project.tabs.map((tab) => (
-                <Tab key={tab.id} tab={tab} />
+              {isDetailsExpanded && project.tabs && project.tabs.map((tab) => (
+                <Tab key={tab.id} tab={tab} /> 
               ))}
 
               {/* Show/Hide Button moved to bottom left */}

@@ -8,12 +8,22 @@ document.addEventListener('DOMContentLoaded', function () {
         trackingButton.textContent = result.isTracking ? 'Stop Tracking' : 'Start Tracking';
     });
 
-    trackingButton.addEventListener('click', () => {
-        console.log("Tracking toggled");
-        chrome.runtime.sendMessage({ toggle: 'toggleTracking' });
-        // Toggle the button text
-        const newText = trackingButton.textContent === 'Start Tracking' ? 'Stop Tracking' : 'Start Tracking';
-        trackingButton.textContent = newText;
+    trackingButton.addEventListener('click', function() {
+        chrome.storage.local.get(['isTracking'], function (result) {
+            if (!result.isTracking) { // If not currently tracking, then prompt for intention
+                const projectIntention = prompt("What's your intention for this project?");
+                if (projectIntention) { // Check if the user entered something
+                    // Store the intention in chrome's local storage
+                    chrome.storage.local.set({'projectIntention': projectIntention}, function() {
+                        console.log('Project intention saved:', projectIntention);
+                        // Optionally, send the intention to your server here or at a different point in your logic
+                    });
+                }
+            }
+            chrome.runtime.sendMessage({ toggle: 'toggleTracking' });
+            // Toggle tracking state after potentially setting project intention
+            toggleTrackingStateAndUpdateButtonText();
+        });
     });
 
     clearHistoryButton.addEventListener('click', () => {
@@ -21,14 +31,33 @@ document.addEventListener('DOMContentLoaded', function () {
         chrome.runtime.sendMessage({ toggle: 'clearHistory' });
     });
 
+    // Within your document.addEventListener('DOMContentLoaded', ...
     generateSummaryButton.addEventListener('click', () => {
         console.log("Generating Summary");
-        chrome.runtime.sendMessage({ toggle: 'generateSummary' });
+        generateSummaryButton.textContent = "Generating...";
+        generateSummaryButton.disabled = true; // Optionally disable the button to prevent multiple clicks
+        chrome.runtime.sendMessage({ toggle: 'generateSummary' }, function(response) {
+            // Once the summary has been generated, change the text back
+            generateSummaryButton.textContent = "Generate Summary";
+            generateSummaryButton.disabled = false; // Re-enable the button
+            // Optionally call showSummary() here if the summary is updated as a result of this operation
+            showSummary();
+        });
     });
-
     showSummary();
     
 });
+
+function toggleTrackingStateAndUpdateButtonText() {
+    chrome.storage.local.get(['isTracking'], function(result) {
+        const isCurrentlyTracking = result.isTracking;
+        const newText = isCurrentlyTracking ? 'Start Tracking' : 'Stop Tracking';
+        chrome.storage.local.set({isTracking: !isCurrentlyTracking}, () => {
+            console.log("Tracking toggled to " + (!isCurrentlyTracking ? 'ON' : 'OFF'));
+            document.getElementById('toggleTracking').textContent = newText;
+        });
+    });
+}
 
 function showSummary() {
     const summaryField = document.getElementById('summary');
