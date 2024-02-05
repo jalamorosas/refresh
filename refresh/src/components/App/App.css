@@ -72,3 +72,16 @@ body {
   z-index: 10;
   box-shadow: 0 4px 
 }
+
+/* Add this class for the "refresh" text to underline on hover with a light green color */
+.refresh-text:hover {
+  color: lightgreen; /* Or use the hex code for the light green color you prefer */
+}
+
+/* Make sure you add this to prevent the underline from being there all the time */
+.refresh-text {
+  cursor: pointer;
+  font-size: 30px;
+  text-decoration: none; /* This ensures it's not underlined by default */
+  transition: color 0.3s ease; /* Smooth transition for color change */
+}

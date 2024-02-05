@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Project from '../Project/Project';
 import './App.css';
 import cucSlice from '../../images/cucSlice.png';
+import testData from './testData'; // Same level as App.js
 
 const App = () => {
   const [projects, setProjects] = useState([]);
@@ -25,13 +26,11 @@ const App = () => {
     setProjects(projects.filter(project => project.id !== projectId));
   };
 
-  const addTabToProject = (projectId, tabName, tabContent) => {
-    setProjects(projects.map(project => {
-      if (project.id === projectId) {
-        const newTab = { id: Date.now(), name: tabName, content: tabContent };
-        return { ...project, tabs: [...project.tabs, newTab] };
-      }
-      return project;
+  const addTabToProject = (projectId, newTab) => {
+    setProjects((prevProjects) => prevProjects.map((project) => {
+      return project.id === projectId
+        ? { ...project, tabs: [...project.tabs, newTab] }
+        : project;
     }));
   };
 
@@ -41,36 +40,50 @@ const App = () => {
   };
 
   useEffect(() => {
-    const receiveMessage = (event) => {
-      if (event.source === window && event.data && event.data.type === "FROM_EXTENSION") {
-        const data = event.data.data; // This is your array of arrays
+    // Define a single project ID for all testData tabs
+    const testDataProjectId = `project-${Date.now()}`;
+    const testDataProjectName = 'Test Data Project';
+    const testDataProjectDescription = 'Generated from testData';
   
-        // Example of processing the received data
-        // Assuming each entry is [title, url], and you want to create a new project for each
-        data.forEach((entry, index) => {
-          const [title, url] = entry;
-          // For simplicity, using index as projectId, adjust as necessary
-          const projectId = `project-${index}`;
-          const tabName = title; // Assuming the title is what you want to name the tab
-          const tabContent = url; // Using the URL as tab content, adjust as necessary
+    // Check if the test data project already exists, if not, create it
+    if (!projects.some(project => project.id === testDataProjectId)) {
+      addProject(testDataProjectName, testDataProjectDescription);
+    }
+  
+    // Process the test data and add each entry as a tab to the test data project
+    testData.forEach((entry) => {
+      const [title, url] = entry;
+      const newTab = { id: Date.now().toString(), name: title, content: url };
+      addTabToProject(testDataProjectId, newTab);
+    });
+  }, []); // Empty array ensures this effect runs only once
+  // useEffect(() => {
+  //   const receiveMessage = (event) => {
+  //     if (event.source === window && event.data && event.data.type === "FROM_EXTENSION") {
+  //       const data = event.data.data;
+
+  //       // Process the received data
+  //       testDataata.forEach((entry) => {
+  //         const [title, url] = entry;
+  //         const newProjectId = Date.now().toString(); // Use timestamp as a unique ID
+  //         const newProject = {
+  //           id: newProjectId,
+  //           name: title, // Use the title as the project name
+  //           description: 'Generated from Chrome Extension',
+  //           tabs: [{ id: Date.now(), name: title, content: url }], // Use the title and URL for the default tab
+  //         };
           
-          // Check if the project exists
-          const projectExists = projects.some(project => project.id === projectId);
-          if (!projectExists) {
-            addProject(`Project ${projectId}`, 'Generated from Chrome Extension');
-          }
-          // Add the tab to the project
-          setTimeout(() => addTabToProject(projectId, tabName, tabContent), 0);
-        });
-      }
-    };
-  
-    window.addEventListener("message", receiveMessage);
-  
-    return () => {
-      window.removeEventListener("message", receiveMessage);
-    };
-  }, [projects]);
+  //         setProjects((prevProjects) => [...prevProjects, newProject]);
+  //       });
+  //     }
+  //   };
+
+  //   window.addEventListener("message", receiveMessage);
+
+  //   return () => {
+  //     window.removeEventListener("message", receiveMessage);
+  //   };
+  // }, []); // Removed projects from the dependencies array
 
   const updateProject = (projectId, newName, newDescription) => {
     setProjects(projects.map(project => {
